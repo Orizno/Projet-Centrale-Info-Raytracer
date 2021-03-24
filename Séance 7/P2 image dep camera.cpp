@@ -493,20 +493,20 @@ public:
                             Normale = alpha * normals[indices[i].ni] + beta * normals[indices[i].nj] + gamma * normals[indices[i].nk]; //on prend la normale définie dans le fichier obj
                             Normale = Normale.normaliser();
                             P = r.C + t * r.u;
-                            Vecteur UV = alpha * uvs[indices[i].uvi] + beta * uvs[indices[i].uvj] + gamma * uvs[indices[i].uvk];
-                            int W = Wtex[0];
-                            int H = Htex[0];
-                            UV = prodTermeaterme(UV, Vecteur(W, H, 0));
-                            int uvx = UV[0] + 0.5;
+                            Vecteur UV = alpha * uvs[indices[i].uvi] + beta * uvs[indices[i].uvj] + gamma * uvs[indices[i].uvk];// coordonnees sur l'image du point d'intersection
+                            int W = Wtex[0];//largeur de l'image
+                            int H = Htex[0];//hauteur de l'image
+                            UV = prodTermeaterme(UV, Vecteur(W, H, 0)); //pour que les coordonnees soient bien entre (0,W) et (0,H)
+                            int uvx = UV[0] + 0.5; // on les convertit en entier
                             int uvy = UV[1] + 0.5;
-                            uvx = uvx % W;
+                            uvx = uvx % W; // si elles dépassent l'image, on fait un modulo pour qu'elles ne dépassent plus
                             uvy = uvy % H;
-                            if (uvx < 0) uvx += W;
+                            if (uvx < 0) uvx += W; // on ne veut pas non plus qu'elles soient négatives
                             if (uvy < 0) uvy += H;
-                            uvy = H - uvy - 1;
+                            uvy = H - uvy - 1;//pour éviter l'inversion selon y
                             couleur = Vecteur(std::pow(textures[0][(uvy * W + uvx) * 3] / 255., 2.2),
                                 std::pow(textures[0][(uvy * W + uvx) * 3 + 1] / 255., 2.2),
-                                std::pow(textures[0][(uvy * W + uvx) * 3 + 2] / 255., 2.2));
+                                std::pow(textures[0][(uvy * W + uvx) * 3 + 2] / 255., 2.2)); // on applique le gamma
 
 
 
